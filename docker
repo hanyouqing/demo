@@ -1,0 +1,107 @@
+#!/usr/bin/env bash
+#
+###################################################################
+# @usage: 
+#   A Tool to build/remove docker image or remove/run container.
+# @author: ihanyouqing@gmail.com
+###################################################################
+#
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin
+
+#set -x
+#set -e
+
+PROJECT="demo"
+
+function msg() {
+    echo "[$(date '+%F %T%z')] ${@}"
+}
+
+function fun_tag() {
+    ver="$(git rev-parse HEAD)"
+    tag="release-vv1-$(git rev-parse --short HEAD)"
+    
+    is_tag=$(git tag | grep ${tag})
+    if [[ "${is_tag}" != "" ]]; then
+        msg "Tag \"${tag}\" already exists."
+    else
+        git tag -a "${tag}" -m "${ver}"
+        msg "Run this command to push tags: git push origin --tags"
+    fi 
+}
+
+function fun_ps() {
+    docker ps -a
+    return $?
+}
+
+function fun_rm() {
+    docker ps -a|awk '{print $NF}' | grep -v NAMES|xargs docker rm
+}
+
+function fun_rmi() {
+    docker images|grep none|awk '{print $3}'|xargs docker rmi
+}
+
+function fun_build() {
+    docker build -t ${PROJECT} .
+}
+
+function fun_in() {
+    docker exec -ti ${PROJECT} bash
+}
+
+function fun_run() {
+    docker run \
+        --rm \
+        -ti \
+        --name ${PROJECT} \
+        --hostname ${PROJECT} \
+        -p 8000:8000 \
+        ${PROJECT}
+    exit $?
+}
+
+function help() {
+    set +x
+    echo ""
+    echo "Usage: $0 -[h|x|t|c|m|b|r|i]"
+    echo "          -h  Show this help and exit."
+    echo "          -x  Show process details step by step."
+    echo "          -t  Tag latest commit and push."
+    echo "          -c  Remove all contaniers."
+    echo "          -m  Remove all non-complete images (with none keywords)."
+    echo "          -b  Build image ${PROJECT} from current directory."
+    echo "          -r  Run a contanier with ${PROJECT} ."
+    echo "          -i  Enter ${PROJECT} container."
+    echo ""
+}
+
+function process_args() {
+    while getopts :htcmbirx opt
+    do
+        case "${opt}" in 
+            h) help && exit 0 ;;
+            x) set -x;;
+            t) fun_tag ;;
+            c) fun_rm ;;
+            m) fun_rmi ;;
+            b) fun_build ;;
+            r) fun_run;;
+            i) fun_in ;;
+            \?) msg "Error: illegal option -- ${OPTARG}" ;;
+            :) msg "Error: Option -${OPTARG} requires on argument." ;;
+        esac
+    done
+
+    shift "$(( $OPTIND - 1 ))"
+    set +x
+}
+
+process_args "${@}"
+
+if [[ "${#}" -eq 0 ]]; then
+    msg "No options supplied, see help below:"
+    help
+    exit 1
+fi
