@@ -20,3 +20,11 @@
 * [相关链接（建议）]：Issue #1
 * [描述信息（可选）]：
 * [备注说明（可选）]：
+
+* **What problem will be solved by this pr?**
+
+* **Which environment did you met this problem?**
+
+* **Is there a story or thread to get more information?**
+
+* **Does it has been fully tested?**
