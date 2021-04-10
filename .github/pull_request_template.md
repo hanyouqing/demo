@@ -1,7 +1,7 @@
 <!--
 !!!ATTENTION!!!
 
-当前内容来自 PR 模版
+Content comes from pull_request_template.
 
 * **工作流程：** https://github.com/alc-beijing/translation/blob/master/docs/WORKFLOW.md
 * **翻译指南：** https://github.com/alc-beijing/translation/blob/master/docs/GUIDE.md
@@ -17,14 +17,10 @@
 !!!ATTENTION!!!
 -->
 
-* [相关链接（建议）]：Issue #1
-* [描述信息（可选）]：
-* [备注说明（可选）]：
-
-* **What problem will be solved by this pr?**
-
-* **Which environment did you met this problem?**
-
-* **Is there a story or thread to get more information?**
-
-* **Does it has been fully tested?**
+* **What _problem_ will be solved by this PR?**
+* **Which _environment_ did you meet this problem and how to _re-produce_ ?**
+* **Is there a _story/thread/issue_ to get more information?**
+  * issue: # <issue-id>
+  * story: 
+  * thread:
+* **Does it has been fully _tested?_**
